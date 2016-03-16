@@ -1,12 +1,21 @@
+//CS 342 - SPRING 2016
+//Project 3
+//Group 55
+//Member : Hoang Minh Huynh Nguyen (hhuynh20)
+//Member : Kevin Molina (kmolin2)
+
+//Class: HugeInteger.java
+//Responsibility: used to create huge integer number
 
 public class HugeInteger {
 	
 	public int[] digits;
 	
 	public HugeInteger(){
-		digits = new int[100];
+		digits = new int[100]; //array to store digits
 	}
 	
+	//Constructor, parameter is a HugeInteger object
 	public HugeInteger(HugeInteger i){
 		digits = new int[100];
 		for(int n = 0; n < 100; n++){
@@ -14,6 +23,7 @@ public class HugeInteger {
 		}
 	}
 	
+	//Constructor, parameter is a string representation of huge integer number
 	public HugeInteger(String s){
 		digits = new int[100];
 		for(int n = 0; n < s.length(); n++){
@@ -21,12 +31,14 @@ public class HugeInteger {
 		}
 	}
 	
+	//Assign function, used for copy
 	public void assign(HugeInteger i){
 		for(int n = 0; n < 100; n++){
 			this.digits[n] = i.digits[n];
 		}
 	}
 	
+	//Addition function
 	public HugeInteger add(HugeInteger i){
 		int carry = 0;
 		for(int n = 0; n < 100; n++){
@@ -41,6 +53,7 @@ public class HugeInteger {
 		return this;
 	}
 	
+	//Subtraction function: a - b, if b > a, just return a. In this program we don't need to handle negative number
 	public HugeInteger subtract(HugeInteger i){
 		if(this.lessThan(i))
 			return this;
@@ -59,6 +72,7 @@ public class HugeInteger {
 		return this;
 	}
 	
+	//Multiplication helper function, multiply a HugeInteger and a single digit integer
 	public HugeInteger multiplyUnit(int i, int index){
 		HugeInteger zero = new HugeInteger();
 		if(i == 0)
@@ -76,6 +90,7 @@ public class HugeInteger {
 		}
 	}
 	
+	//Multiplication function, using long multiplication algorithm
 	public HugeInteger multiply(HugeInteger i){
 		HugeInteger zero = new HugeInteger();
 		if(this.equalTo(zero) || i.equalTo(zero))
@@ -90,6 +105,7 @@ public class HugeInteger {
 		}
 	}
 	
+	//Division function, using long division algorithm
 	public HugeInteger divide(HugeInteger i){
 		HugeInteger zero = new HugeInteger();
 		if(i.equalTo(zero))
@@ -139,16 +155,23 @@ public class HugeInteger {
 		}
 	}
 	
+	//Modulo function
 	public HugeInteger modulus(HugeInteger i){
 		HugeInteger quotient = new HugeInteger(this.divide(i));
-//		System.out.println("quotient:");
-//		for(int j = 0; j < 100; j++)
-//			System.out.print(this.digits[j]);
-//		System.out.println("");
 		HugeInteger product = new HugeInteger(quotient.multiply(i));
-		return this.subtract(product);
+		HugeInteger mod = new HugeInteger(this);
+		return mod.subtract(product);
 	}
 	
+	//Power function, a^b
+	public HugeInteger power(int i){
+		HugeInteger result = new HugeInteger("1");
+		for(int j = 0; j < i; j++)
+			result.assign(this.multiply(result));
+		return result;
+	}
+	
+	//Relational function: equal
 	public boolean equalTo(HugeInteger i){
 		for(int n = 0; n < 100; n++)
 			if(this.digits[n] != i.digits[n])
@@ -156,6 +179,7 @@ public class HugeInteger {
 		return true;
 	}
 	
+	//Relational function: greater than
 	public boolean greaterThan(HugeInteger i){
 		for(int n = 99; n >= 0; n--){
 			if(this.digits[n] > i.digits[n])
@@ -166,6 +190,7 @@ public class HugeInteger {
 		return false;
 	}
 	
+	//Relational function: less than
 	public boolean lessThan(HugeInteger i){
 		for(int n = 99; n >= 0; n--){
 			if(this.digits[n] < i.digits[n])
@@ -176,6 +201,7 @@ public class HugeInteger {
 		return false;
 	}
 	
+	//Function used to find the greatest common divisor, using Euclidian algorithm
 	public HugeInteger GCD(HugeInteger i){
 		HugeInteger zero = new HugeInteger();
 		if(i.equalTo(zero))
@@ -185,23 +211,13 @@ public class HugeInteger {
 			HugeInteger b = new HugeInteger(i);
 			while(b.greaterThan(zero)){
 				HugeInteger remain = new HugeInteger(a.modulus(b));
-//				System.out.println("remain:");
-//				for(int j = 0; j < 100; j++)
-//					System.out.print(remain.digits[j]);
-//				System.out.println("");
+
 				a.assign(b);
 				b.assign(remain);
-//				System.out.println("a:");
-//				for(int j = 0; j < 100; j++)
-//					System.out.print(a.digits[j]);
-//				System.out.println("");
-//				System.out.println("b:");
-//				for(int j = 0; j < 100; j++)
-//					System.out.print(b.digits[j]);
-//				System.out.println("");
 			}
 			return a;
 		}
 	}
-
+	
 }
+//end of HugeInteger class
